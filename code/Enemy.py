@@ -1,26 +1,37 @@
 import pygame
-from code.Const import LARGURA, ALTURA
+import random
+from code.Const import LARGURA, ALTURA, VERMELHO
 
 
 class Enemy:
     def __init__(self):
-        self.x = LARGURA - 50
-        self.y = ALTURA // 2
-        self.velocidade = 7
+        # Spawna fora da tela à direita
+        self.x = LARGURA + random.randint(0, 300)
+        self.y = random.randint(50, ALTURA - 90)
+        self.velocidade = random.randint(4, 8)
 
-        # Caminho relativo voltando um nível.
-        imagem_original = pygame.image.load("assets/enemy1.png").convert_alpha()
-        self.image = pygame.transform.scale(imagem_original, (40, 40))
+        try:
+            imagem_original = pygame.image.load("assets/Enemy1.png").convert_alpha()
+            self.image = pygame.transform.scale(imagem_original, (45, 45))
+            self.usa_imagem = True
+        except pygame.error:
+            self.usa_imagem = False
 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (self.x, self.y)
+        self.rect = pygame.Rect(self.x, self.y, 45, 45)
 
     def mover(self):
         self.x -= self.velocidade
         self.rect.topleft = (self.x, self.y)
 
+    # ESTE É O MÉTODO QUE ESTAVA FALTANDO:
     def reiniciar(self):
-        self.x = LARGURA
+        self.x = LARGURA + random.randint(0, 200)
+        self.y = random.randint(50, ALTURA - 90)
+        self.velocidade = random.randint(4, 8)
+        self.rect.topleft = (self.x, self.y)
 
     def desenhar(self, tela):
-        tela.blit(self.image, self.rect)
+        if self.usa_imagem:
+            tela.blit(self.image, self.rect)
+        else:
+            pygame.draw.rect(tela, VERMELHO, self.rect)

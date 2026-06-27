@@ -1,30 +1,38 @@
 import pygame
-from code.Const import ALTURA
+from code.Const import ALTURA, AZUL
+from code.Shot import Shot
 
 
 class Player:
     def __init__(self):
         self.x = 100
         self.y = ALTURA // 2
-        self.velocidade = 5
+        self.velocidade = 6
 
-        # Caminho relativo voltando um nível.
-        imagem_original = pygame.image.load("assets/player1.png").convert_alpha()
-        # Redimensiona a imagem para o tamanho da colisão (40x40)
-        self.image = pygame.transform.scale(imagem_original, (40, 40))
+        try:
+            imagem_original = pygame.image.load("assets/Player1.png").convert_alpha()
+            self.image = pygame.transform.scale(imagem_original, (50, 50))
+            self.usa_imagem = True
+        except pygame.error:
+            self.usa_imagem = False
 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (self.x, self.y)
+        self.rect = pygame.Rect(self.x, self.y, 50, 50)
 
     def mover(self):
         teclas = pygame.key.get_pressed()
-        if teclas[pygame.K_UP] and self.y > 0:
+        if teclas[pygame.K_UP] and self.y > 50:
             self.y -= self.velocidade
-        if teclas[pygame.K_DOWN] and self.y < ALTURA - 40:
+        if teclas[pygame.K_DOWN] and self.y < ALTURA - 90:
             self.y += self.velocidade
 
         self.rect.topleft = (self.x, self.y)
 
+    def atirar(self):
+        # Cria um tiro saindo da ponta direita central da nave
+        return Shot(self.x + 50, self.y + 20)
+
     def desenhar(self, tela):
-        # Desenha a imagem na tela na posição do retângulo de colisão
-        tela.blit(self.image, self.rect)
+        if self.usa_imagem:
+            tela.blit(self.image, self.rect)
+        else:
+            pygame.draw.rect(tela, AZUL, self.rect)

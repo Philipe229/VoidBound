@@ -12,5 +12,6 @@ AZUL = (50, 150, 250)
 # Estados para a máquina de estados do jogo
 MENU = 0
 JOGANDO = 1
-VITORIA = 2
-DERROTA = 3
+FASE2 = 2
+VITORIA = 3
+DERROTA = 4
